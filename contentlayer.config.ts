@@ -78,6 +78,7 @@ async function createTagCount(allBlogs) {
   })
   const formatted = await prettier.format(JSON.stringify(tagCount, null, 2), { parser: 'json' })
   writeFileSync('./app/tag-data.json', formatted)
+  console.log('🏷️. Tag list generated.')
 }
 
 function createSearchIndex(allBlogs) {
@@ -89,7 +90,7 @@ function createSearchIndex(allBlogs) {
       `public/${path.basename(siteMetadata.search.kbarConfig.searchDocumentsPath)}`,
       JSON.stringify(allCoreContent(sortPosts(allBlogs)))
     )
-    console.log('Local search index generated...')
+    console.log('🔍 Local search index generated.')
   }
 }
 
@@ -183,5 +184,6 @@ export default makeSource({
     const { allBlogs } = await importData()
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
+    console.log('✨ Content source generated successfully!')
   },
 })

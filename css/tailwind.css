@@ -12,17 +12,17 @@
 
   /* Colors */
   /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
-  --color-primary-50: oklch(0.971 0.014 343.198);
-  --color-primary-100: oklch(0.948 0.028 342.258);
-  --color-primary-200: oklch(0.899 0.061 343.231);
-  --color-primary-300: oklch(0.823 0.12 346.018);
-  --color-primary-400: oklch(0.718 0.202 349.761);
-  --color-primary-500: oklch(0.656 0.241 354.308);
-  --color-primary-600: oklch(0.592 0.249 0.584);
-  --color-primary-700: oklch(0.525 0.223 3.958);
-  --color-primary-800: oklch(0.459 0.187 3.815);
-  --color-primary-900: oklch(0.408 0.153 2.432);
-  --color-primary-950: oklch(0.284 0.109 3.907);
+  --color-primary-50: oklch(0.982 0.018 155.826);
+  --color-primary-100: oklch(0.962 0.044 156.743);
+  --color-primary-200: oklch(0.925 0.084 155.995);
+  --color-primary-300: oklch(0.871 0.15 154.449);
+  --color-primary-400: oklch(0.792 0.209 151.711);
+  --color-primary-500: oklch(0.723 0.219 149.579);
+  --color-primary-600: oklch(0.627 0.194 149.214);
+  --color-primary-700: oklch(0.527 0.154 150.069);
+  --color-primary-800: oklch(0.448 0.119 151.328);
+  --color-primary-900: oklch(0.393 0.095 152.535);
+  --color-primary-950: oklch(0.266 0.065 152.934);
 
   --color-gray-50: oklch(0.985 0.002 247.839);
   --color-gray-100: oklch(0.967 0.003 264.542);
@@ -97,7 +97,7 @@
       font-weight: 600;
     }
     & :where(code):not(pre code) {
-      color: var(--color-indigo-500);
+      color: var(--color-primary-500);
     }
   }
 
