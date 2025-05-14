@@ -4672,6 +4672,7 @@ __metadata:
     prettier-plugin-tailwindcss: ^0.6.11
     react: 19.0.0
     react-dom: 19.0.0
+    react-medium-image-zoom: ^5.2.14
     reading-time: 1.5.0
     rehype-autolink-headings: ^7.1.0
     rehype-citation: ^2.3.0
@@ -10087,6 +10088,16 @@ __metadata:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
+  languageName: node
+  linkType: hard
+
+"react-medium-image-zoom@npm:^5.2.14":
+  version: 5.2.14
+  resolution: "react-medium-image-zoom@npm:5.2.14"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: b05c645f1af468518972c4fca6e3e74d51c3bb17a68c4d1d27819e0ac680006ac140bebb6002887a7155997c7396232f71c780d55e5827429356dcbeee865312
   languageName: node
   linkType: hard
 

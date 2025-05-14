@@ -1,8 +1,8 @@
 'use client'
-
 import { useState } from 'react'
 import { TOOLS } from '@/data/tools'
 import InteractiveCard from '@/components/InteractiveCard'
+import { Container } from '@/components/ui/container'
 
 const LabelSwitcher = () => {
   const [activeTab, setActiveTab] = useState('iOS')
@@ -16,12 +16,12 @@ const LabelSwitcher = () => {
           Tools
         </h1>
         <p className="mt-4 text-lg leading-7 text-gray-500 dark:text-gray-400">
-          Some tools I use on a daily basis 🛠
+          Some tools I use on a daily basis.
         </p>
       </div>
       <div className="mb-8 flex justify-center space-x-12">
         <button
-          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 ${
+          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 cursor-pointer ${
             activeTab === 'iOS'
               ? 'bg-green-500 text-white'
               : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
@@ -34,7 +34,7 @@ const LabelSwitcher = () => {
           iOS
         </button>
         <button
-          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 ${
+          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 cursor-pointer ${
             activeTab === 'macOS'
               ? 'bg-green-500 text-white'
               : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
@@ -50,7 +50,7 @@ const LabelSwitcher = () => {
           macOS
         </button>
         <button
-          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 ${
+          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 cursor-pointer ${
             activeTab === 'Web'
               ? 'bg-green-500 text-white'
               : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
@@ -63,8 +63,9 @@ const LabelSwitcher = () => {
           Web
         </button>
       </div>
-      <div className="container py-6">
-        <div className="-m-4 flex flex-wrap ">
+
+      <Container className="pt-4 lg:pt-12">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           {filteredTools.map((tool) => (
             <InteractiveCard
               key={tool.label}
@@ -76,7 +77,7 @@ const LabelSwitcher = () => {
             />
           ))}
         </div>
-      </div>
+      </Container>
     </div>
   )
 }
