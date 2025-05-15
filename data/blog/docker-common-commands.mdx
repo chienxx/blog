@@ -1,0 +1,235 @@
+---
+title: ' Docker 常用指令与网络知识全解析'
+date: '2023-07-22'
+tags: ['docker', 'command', 'network']
+draft: false
+summary: 'Docker 作为现代应用开发和部署的重要工具，其指令和网络配置是每个开发者必须掌握的核心技能。本文将深入探讨Docker的常用指令，包括容器管理、镜像操作、网络配置等，帮助你更好地理解和使用Docker。'
+layout: PostLayout
+---
+
+## Docker 常用指令
+
+### 镜像管理
+
+```bash
+# 拉取镜像
+docker pull <image>:<tag>
+
+# 查看本地镜像
+docker images
+
+# 删除镜像
+docker rmi <image_id>
+
+# 构建镜像
+docker build -t <image_name>:<tag> .
+```
+
+### 容器管理
+
+```bash
+# 启动容器
+docker run -d --name <container_name> <image>:<tag>
+
+# 停止容器
+docker stop <container_id>
+
+# 重启容器
+docker restart <container_id>
+
+# 删除容器
+docker rm <container_id>
+
+# 进入容器交互式终端
+docker exec -it <container_id> /bin/bash
+
+# 查看正在运行的容器
+docker ps
+
+# 查看所有容器（包括停止的）
+docker ps -a
+
+```
+
+### 操作容器
+
+```bash
+# 查看容器日志
+docker logs <container_id>
+
+# 实时查看日志
+docker logs -f <container_id>
+
+# 查看容器内运行的进程
+docker top <container_id>
+
+# 在容器内执行命令
+docker exec -it <container_id> <command>
+```
+
+### 数据卷管理
+
+```bash
+# 创建数据卷
+docker volume create <volume_name>
+
+# 查看所有数据卷
+docker volume ls
+
+# 挂载数据卷
+docker run -d -v <volume_name>:/path/in/container <image>
+
+# 删除数据卷
+docker volume rm <volume_name>
+```
+
+## Docker 网络知识详解
+
+### 网络模式
+
+Docker提供了多种网络模式，常见的有：
+
+- **Bridge模式**：桥接网络，默认
+
+  - 每个容器分配一个私有 IP，容器间通过 `docker0` 互通。
+  - 可使用 `docker network connect` 让不同容器加入同一桥接网络。
+
+  ```bash
+  docker network create my_bridge
+  docker run -d --network=my_bridge --name=my_container nginx
+  ```
+
+- **Host模式**：主机网络
+  - 容器直接使用宿主机的网络，不会分配独立的 IP。
+  - 适用于高性能场景，但会占用宿主机端口，可能有端口冲突。
+  ```bash
+    docker run -d --network=host nginx
+  ```
+- **None模式**：无网络
+
+  - 该模式下容器无法访问网络，也无法被访问。
+  - 适用于对网络隔离要求极高的场景。
+
+  ```bash
+  docker run -d --network=none nginx
+  ```
+
+- **Overlay模式**：覆盖网络
+  - 适用于 Swarm 集群，支持跨主机容器通信。
+  ```bash
+  docker network create -d overlay my_overlay
+  ```
+
+### 自定义网络
+
+- 创建自定义网络
+
+```bash
+docker network create <network_name>
+```
+
+创建一个新的自定义网络。
+
+- 查看网络列表
+
+```bash
+docker network ls
+```
+
+列出所有网络。
+
+- 连接容器到网络
+
+```bash
+docker network connect <network_name> <container_id>
+```
+
+将指定容器连接到自定义网络。
+
+- 断开容器与网络的连接
+
+```bash
+docker network disconnect <network_name> <container_id>
+```
+
+将指定容器从网络中移除。
+
+### 网络连接与隔离
+
+- **容器间通信：**
+  - 同一 bridge 网络下的容器可以通过容器名相互访问。
+  - 不同 bridge 网络下的容器可以使用 docker network connect 连接到同一网络。
+  - 使用 docker-compose 时，所有服务默认处于同一网络。
+- **网络隔离**：不同网络中的容器无法直接通信，确保安全性。
+- **DNS解析**：Docker为每个容器提供内置的DNS解析服务，容器可以通过名称解析其他容器的IP地址。
+
+### 端口映射与访问
+
+```bash
+# 以 8080 端口访问 Nginx
+docker run -d -p 8080:80 nginx
+```
+
+- 宿主机 8080 端口映射到容器的 80 端口。
+- 访问 http://localhost:8080 即可访问容器。
+
+## Docker Compose
+
+### Compose简介
+
+Docker Compose 是一个用于定义和运行多容器Docker应用的工具。通过一个YAML文件（docker-compose.yml）配置应用的服务、网络和数据卷，简化多容器应用的部署和管理。
+
+### Compose文件结构
+
+以下是一个简单的 `docker-compose.yml` 示例：
+
+```yml
+version: '3.8'
+services:
+  web:
+    image: nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./html:/usr/share/nginx/html
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+```
+
+- **version**：指定Compose文件版本。
+
+- **services**：定义服务（容器）。
+
+- **image**：指定使用的镜像。
+
+- **ports**：端口映射。
+
+- **volumes**：数据卷挂载。
+
+- **environment**：设置环境变量。
+
+### 常用指令
+
+```bash
+# 启动 Compose 服务
+docker-compose up -d
+
+# 关闭 Compose 服务
+docker-compose down
+
+# 查看服务日志
+docker-compose logs -f
+
+# 重启服务
+docker-compose restart
+
+# 只启动某个服务
+docker-compose up -d <service_name>
+```
+
+## 结语
+
+这些知识将帮助你在实际项目中更高效地使用Docker，简化应用部署和管理流程。无论是单容器还是多容器应用，Docker都能为你提供强大的支持。希望本文能为你的Docker学习之旅提供帮助！
+

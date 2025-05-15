@@ -1,0 +1,110 @@
+---
+title: '自建私人音乐服务器 - Navidrome'
+date: '2025-01-18'
+lastmod: '2025-01-20'
+tags: ['vps', 'guide', 'navidrome', 'linux']
+draft: false
+summary: 'Navidrome 是一款简洁而强大的自托管音乐流媒体服务，它专为音频爱好者设计，能够提供快速、无缝的音乐播放体验。借助 Navidrome，您可以将个人音乐库转变为一个现代化的流媒体服务平台，支持多种设备的访问，无论是在家中、办公桌前，还是外出时，你都可以随时随地享受高质量的音乐播放。'
+layout: PostLayout
+---
+
+> [!NOTE] **目前国内音乐平台，曲库的不完整常常让人感到烦恼（说的就是你，网抑☁️）。为了满足个人的音乐需求，用户不得不在多个APP之间来回切换，浪费了不少时间和精力，于是就想着自建一个类似云音乐的服务。找了一圈发现了这款开源免费的项目--Navidrome，界面简洁操作简单，
+> 使用 Go 语言开发，内存占用低，对机器的性能要求不高，适合拿来折腾玩玩。**
+
+## 准备工作
+
+- 云服务器（本教程使用 Ubuntu 系统）
+- 安装 Docker、Docker Compose [安装指南](https://jxzsite.com/blog/vps/new-vps-config#%E5%AE%89%E8%A3%85-docker-%E5%92%8C-docker-compose)
+
+## 开始搭建
+
+```bash
+## 升级包
+apt update -y
+## 创建应用目录
+mkdir /home/apps/navidrome && cd navidrome
+## 编辑 docker 配置
+vim docker-compose.yml
+```
+
+### `docker-compose` 配置：
+
+```yml
+version: '3'
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    ports:
+      - '4533:4533' # 冒号左边可以改成服务器未被占用的任意端口
+    restart: unless-stopped
+    environment:
+      ND_SCANSCHEDULE: '@weekly'
+      ND_SESSIONTIMEOUT: 24h
+      ND_BASEURL: '/navi'
+      ND_PLAYLISTSPATH: '.'
+      ND_SPOTIFY_ID: '你的spotify id'
+      ND_SPOTIFY_SECRET: '你的spotify secret'
+      ND_ENABLEARTWORKPRECACHE: 'true'
+      ND_ENABLESHARING: 'true'
+      ND_ENABLETRANSCODINGCONFIG: 'true'
+    volumes:
+      - './data:/data'
+      - '/home/apps/navidrome/music:/music:ro' # 冒号左边改成自己本地实际的音乐文件夹路径
+```
+
+### 环境配置说明：
+
+| 参数                       | 说明                                                              | 默认值    |
+| -------------------------- | ----------------------------------------------------------------- | --------- |
+| ND_SCANSCHEDULE            | 扫描周期，多久扫描一次音乐库，@weekly表示每周扫描一次目录         | @every 1m |
+| ND_SESSIONTIMEOUT          | 空闲会话超时时间                                                  | 24h       |
+| ND_BASEURL                 | 相对路径，反代时很有用，不会暴露navidrome的端口，有一定的保护作用 | /         |
+| ND_PLAYLISTSPATH           | 播放列表的相对路径                                                | .         |
+| ND_SPOTIFY_ID              | 通过 spotify 获取歌曲封面信息                                     | 空        |
+| ND_SPOTIFY_SECRET          | 通过 spotify 获取歌曲封面信息                                     | 空        |
+| ND_ENABLEARTWORKPRECACHE   | 是否启用封面图片缓存                                              | true      |
+| ND_ENABLESHARING           | 启用分享功能，可以不登录就可以听歌                                | true      |
+| ND_ENABLETRANSCODINGCONFIG | 在UI中启用转码配置                                                | false     |
+
+### 启动应用
+
+```bash
+docker-compose up -d
+```
+
+- 启动成功，访问 `IP:4533` 可以看到界面
+  ![navidrome](https://image.jxzsite.com/i/2025/02/24/qyqzt7.png)
+
+  - 创建管理员账号和密码进行登录并保存登录信息
+  - 在之前定义的音乐文件夹路径，上传音乐文件
+    ![music](https://image.jxzsite.com/i/2025/02/24/qyr4re.png)
+  - 界面出现上传的音乐专辑
+    ![music1](https://image.jxzsite.com/i/2025/02/24/qzbbe2.png)
+
+- 启动失败，查看容器报错日志解决
+
+```bash
+## 查看容器id
+docker ps -a
+## 查看日志
+docker logs 容器id
+```
+
+## 挂载 OneDrive
+
+由于 VPS 存储空间通常有限，通常只有几十GB，若想收集大量高品质音乐显然不够。因此，可以通过挂载外部存储来“曲线救国”，实现存储扩展。**详细教程可参考我的[这篇文章](https://jxzsite.com/blog/guide/mount-onedrive)。**
+
+### 上传音乐文件到 OneDrive Music 文件夹下
+
+![music](https://image.jxzsite.com/i/2025/02/24/qzpxv6.png)
+
+### 点击红色框框内任一图标扫描文件夹，可以看到成功加载到 Navidrome
+
+![new](https://image.jxzsite.com/i/2025/02/24/r0azbh.png)
+
+## 最后
+
+分享两个下载无损音乐资源的 TG 渠道
+
+- [Lossless_Yinyue](https://t.me/Lossless_Yinyue)
+- [deezload2bot](https://t.me/deezload2bot)

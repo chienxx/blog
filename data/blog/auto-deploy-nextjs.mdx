@@ -1,0 +1,104 @@
+---
+title: 'GitHub Actions 实现 Next.js 应用的自动化部署'
+date: '2024-03-07'
+lastmod: '2024-03-09'
+tags: ['nextjs', 'guide', 'github', 'linux']
+draft: false
+summary: '通过配置 GitHub Actions 工作流，用户可以实现代码提交后，自动将 Next.js 应用部署到服务器，简化了手动部署过程，帮助你轻松搭建个人博客网站。'
+layout: PostLayout
+---
+
+## 服务器环境配置
+
+### 1. 在 VPS 上生成 SSH 密钥对
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+```
+
+生成后的公钥（`id_rsa.pub`）和私钥（`id_rsa`）被保存在服务器的：`/root/.ssh`路径下。
+
+### 2. 将公钥添加到 GitHub
+
+- 复制公钥内容
+- 登录 GitHub，进入 **Settings > SSH and GPG keys**
+- 点击 **New SSH key**，粘贴公钥并保存
+
+### 3. 验证 SSH 连接
+
+```bash
+ssh -T git@github.com
+```
+
+如果设置成功，GitHub 会返回类似 `Hi username! You've successfully authenticated, but GitHub does not provide shell access.` 的信息
+
+### 4. 免密登录 VPS
+
+- 复制公钥内容
+- 添加公钥到所在同级目录的`authorized_keys`文件中
+
+### 5. 安装 Git，Node，Npm，Yarn，Pm2
+
+```bash
+apt-get update
+apt-get install git
+#该博客项目使用node20.x版本
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+apt install -y nodejs
+npm install -g yarn
+npm install -g pm2
+```
+
+### 6. 克隆项目
+
+```bash
+git clone https://github.com/timlrx/tailwind-nextjs-starter-blog
+```
+
+## GitHub 相关配置
+
+### 1. 将服务器生成的私钥和服务器相关信息填写到GitHub项目仓库下图位置
+
+![github-1](https://image.jxzsite.com/i/2025/02/24/qxgoxx.png)
+
+### 2. 在项目代码仓库中，创建目录 .github/workflows/，新建yml文件，文件名可自定义
+
+```yml
+name: Deploy Next.js Blog
+
+on:
+  push:
+    branches: master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: deploy with ssh
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ${{ secrets.PATH }}
+            git pull origin master
+            pm2 delete nextjs-blog || true
+            yarn
+            yarn build
+            pm2 start yarn --interpreter bash  --name "nextjs-blog" -- start
+            pm2 save
+```
+
+- push：表示当有代码推送到指定的分支时触发
+- branches：指定了要监听的分支，可以是一个分支名称或一个模式
+- uses：使用 `appleboy/ssh-action@v1.0.3` 通过 SSH 执行一系列命令
+- with：动态传递 `Secrets and  variables` 中定义的 Secrets 参数
+- script：执行脚本
+
+## 最终运行效果
+
+![github-2](https://image.jxzsite.com/i/2025/02/24/qxhaji.png)
+

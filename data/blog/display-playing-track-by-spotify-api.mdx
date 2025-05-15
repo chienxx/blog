@@ -1,0 +1,126 @@
+---
+heading: '展示 Spotify 正在播放的歌曲'
+title: '如何通过 Spotify API 获取并展示当前播放歌曲'
+date: '2025-02-26'
+icon: 'Spotify'
+draft: false
+summary: '通过 Spotify 开放的 API 读取访问令牌并在网站或者应用上实时显示当前播放的曲目信息。'
+tags: ['spotify', 'spotify-api', 'nextjs']
+---
+
+如果您想在网站上显示 Spotify 正在播放的曲目，您需要从 Spotify 获取一个令牌。此令牌将用于从 Spotify API 获取曲目信息。
+
+## 创建 Spotify 应用
+
+首先，您需要创建一个 Spotify 应用程序来获取凭据，以便生成令牌。
+
+- 访问 [Spotify for Developers](https://developer.spotify.com/dashboard/applications)，使用 Spotify 账户登录。
+- 点击 **Create app** 按钮。
+- 填写表格并输入应用程序名称和描述。
+- 添加重定向 URI。该 URI 将用于在验证后重定向到您的本地应用程序。例如，你启动的本地服务：`http://localhost:3000`。
+- 点击 **Save** 按钮。
+
+创建应用程序后，导航到 **Settings** 页面并复制 `Client ID` 和 `Client secret`。
+我们将在下一步中使用这些值。
+
+![Spotify App](http://image.jxzsite.com/i/2025/02/26/qgsxry.png)
+
+## 认证与授权
+
+由于只需生成一次令牌，我们将使用 [Authorization Code Flow](https://developer.spotify.com/documentation/web-api/concepts/authorization#authorization-code-flow)。
+导航到下面的 URL，并将 `CLIENT_ID` 替换为 Spotify 应用程序的 `CLIENT_ID`：
+
+```bash
+https://accounts.spotify.com/authorize?client_id=CLIENT_ID&response_type=code&redirect_uri=http://localhost:3000&scope=user-read-currently-playing
+```
+
+将上面的请求地址复制到浏览器并访问，Spotify 会将用户重定向到你指定的 redirect_uri，并在 **URL** 中附带一个授权码 `code`：
+![Spotify auth](http://image.jxzsite.com/i/2025/02/26/qmau10.png)
+
+使用上一步获取的授权码，通过 API 工具请求获取访问令牌：
+
+**请求头**
+![header](http://image.jxzsite.com/i/2025/02/26/qqzgsl.png)
+
+- Authorization：使用 `CLIENT_ID:Client secret` 格式进行 Base64 编码
+- Content-Type：固定值 `application/x-www-form-urlencoded`
+
+**请求体**
+![body](http://image.jxzsite.com/i/2025/02/26/qqzfb7.png)
+
+- grant_type：固定值 `authorization_code`
+- code：授权码
+- redirect_uri：重定向 URI
+
+**响应结果**
+
+```json
+{
+  "access_token": "access_token",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "refresh_token",
+  "scope": "user-read-currently-playing"
+}
+```
+
+## 查询正在播放的曲目
+
+现在我们有了令牌，可以用它从 Spotify API 获取正在播放的曲目。
+使用下面代码在节点服务器中获取正在播放的曲目：
+
+```js:spotify.js showLineNumbers
+import fetch from 'isomorphic-unfetch'
+
+let SPOTIFY_TOKEN_API = `https://accounts.spotify.com/api/token`
+let SPOTIFY_NOW_PLAYING_API = `https://api.spotify.com/v1/me/player/currently-playing`
+let SPOTIFY_TOP_TRACKS_API = `https://api.spotify.com/v1/me/top/tracks`
+
+let {
+  SPOTIFY_CLIENT_ID: client_id,
+  SPOTIFY_CLIENT_SECRET: client_secret,
+  SPOTIFY_REFRESH_TOKEN: refresh_token,
+} = process.env
+
+let basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64')
+
+async function getAccessToken() {
+  let response = await fetch(SPOTIFY_TOKEN_API, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${basic}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token,
+    }),
+  })
+
+  return response.json()
+}
+
+export async function getNowPlaying() {
+  let { access_token } = await getAccessToken()
+  let url = new URL(SPOTIFY_NOW_PLAYING_API)
+  url.searchParams.append('additional_types', 'track,episode')
+
+  return fetch(url.toString(), {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  })
+}
+```
+
+记得在 .env 文件中添加所需的环境变量。
+
+```bash:.env showLineNumbers
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+SPOTIFY_REFRESH_TOKEN=your_spotify_refresh_token
+```
+
+现在你可以使用 `getNowPlaying` 函数从 Spotify API 获取正在播放的曲目，看看效果：
+![now](http://image.jxzsite.com/i/2025/02/26/r7jkjp.png)
+

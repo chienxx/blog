@@ -1,0 +1,113 @@
+---
+heading: '游标 + 存储过程同步数据'
+title: '结合游标和存储过程快速实现表数据迁移，轻松实现数据割接'
+date: '2022-05-19'
+icon: 'MySQL'
+draft: false
+summary: '日常开发中存储过程和游标很少用到，但在某些场景下，例如小规模数据迁移，使用该方式能够以简洁高效的方式满足需求。'
+tags: ['mysql', 'data', 'sql']
+---
+
+项目开发过程中遇到表结构调整和数据迁移需求，为了少写代码想到可以在 MySQL 中利用游标和存储过程直接实现，由此记录下。
+
+## 游标的基本概念
+
+游标（Cursor）是数据库中用于遍历查询结果集的机制。它允许逐行处理数据，适用于需要对每一行进行特定操作的场景。MySQL中的游标主要用于存储过程和函数中。
+
+## 游标的使用方法
+
+### 声明游标
+
+在存储过程中，首先需要声明游标。声明游标的语法如下：
+
+```sql
+DECLARE cursor_name CURSOR FOR select_statement;
+```
+
+其中，cursor_name是游标的名称，select_statement是查询语句。
+
+### 打开游标
+
+声明游标后，需要使用 **OPEN** 语句打开游标：
+
+```sql
+OPEN cursor_name;
+```
+
+打开游标后，可以开始遍历查询结果。
+
+### 获取游标数据
+
+使用 **FETCH** 语句从游标中获取一行数据：
+
+```sql
+FETCH cursor_name INTO var1, var2, ...;
+```
+
+var1, var2, ...是用于存储查询结果的变量。
+
+### 关闭游标
+
+遍历完数据后，使用CLOSE语句关闭游标：
+
+```sql
+CLOSE cursor_name;
+```
+
+关闭游标后，释放相关资源。
+
+## 数据同步
+
+### 创建存储过程
+
+首先，创建一个存储过程，用于处理数据同步逻辑：
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE sync_data()
+BEGIN
+    -- 声明变量
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE var1 INT;
+    DECLARE var2 VARCHAR(255);
+    -- 声明游标
+    DECLARE cur CURSOR FOR SELECT id, name FROM source_table;
+    -- 声明异常处理
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    -- 打开游标
+    OPEN cur;
+
+    -- 遍历游标
+    read_loop: LOOP
+        FETCH cur INTO var1, var2;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        -- 同步数据逻辑
+        INSERT INTO target_table (id, name) VALUES (var1, var2);
+    END LOOP;
+
+    -- 关闭游标
+    CLOSE cur;
+END //
+
+DELIMITER ;
+```
+
+### 调用存储过程
+
+创建存储过程后，可以通过以下语句调用：
+
+```sql
+CALL sync_data();
+```
+
+调用存储过程后，数据将从source_table同步到target_table。
+
+> [!Caution] **注意事项**
+
+- 性能问题：游标逐行处理数据，性能较低，不适合处理大数据量。
+
+- 异常处理：确保在游标使用过程中处理异常，避免资源泄漏。

@@ -1,28 +1,22 @@
 ---
-title: 'Markdown Guide'
-date: '2019-10-11'
-tags: ['github', 'guide']
+heading: 'Markdown 简易指南'
+title: 'Markdown 语法快速入门'
+date: '2023-10-11'
+icon: 'Markdown'
 draft: false
-summary: 'Markdown cheatsheet for all your blogging needs - headers, lists, images, tables and more! An illustrated guide based on GitHub Flavored Markdown.'
+summary: '快速掌握 Markdown 语法，涵盖标题、列表、图片、表格等常见格式，基于 GitHub Flavored Markdown 的图解示例。'
+tags: ['markdown', 'guide', 'syntax']
 ---
 
-# Introduction
+## 什么是 Markdown
 
-Markdown and Mdx parsing is supported via `unified`, and other remark and rehype packages. `next-mdx-remote` allows us to parse `.mdx` and `.md` files in a more flexible manner without touching webpack.
+Markdown 是一种轻量级标记语言，用于格式化文本内容。它通过简单的标记符号（如 `#` 和 `*`）来控制文本的显示方式，例如加粗、斜体、插入图片或创建列表等。
 
-GitHub flavored markdown is used. `mdx-prism` provides syntax highlighting capabilities for code blocks. Here's a demo of how everything looks.
+## 语法指南
 
-The following markdown cheatsheet is adapted from: https://guides.github.com/features/mastering-markdown/
+以下是常见 Markdown 语法的总结，适用于 GitHub 或任何支持 Markdown 的平台。
 
-# What is Markdown?
-
-Markdown is a way to style text on the web. You control the display of the document; formatting words as bold or italic, adding images, and creating lists are just a few of the things we can do with Markdown. Mostly, Markdown is just regular text with a few non-alphabetic characters thrown in, like `#` or `*`.
-
-# Syntax guide
-
-Here’s an overview of Markdown syntax that you can use anywhere on GitHub.com or in your own text files.
-
-## Headers
+### 标题
 
 ```
 # This is a h1 tag
@@ -38,7 +32,9 @@ Here’s an overview of Markdown syntax that you can use anywhere on GitHub.com 
 
 #### This is a h4 tag
 
-## Emphasis
+### 强调文本
+
+你可以通过 `_` 或 `**` 来使文本斜体或加粗：
 
 ```
 _This text will be italic_
@@ -54,9 +50,9 @@ _This text will be italic_
 
 _You **can** combine them_
 
-## Lists
+### 列表
 
-### Unordered
+#### 无序列表
 
 ```
 - Item 1
@@ -70,7 +66,7 @@ _You **can** combine them_
   - Item 2a
   - Item 2b
 
-### Ordered
+#### 有序列表
 
 ```
 1. Item 1
@@ -86,16 +82,19 @@ _You **can** combine them_
    1. Item 3a
    1. Item 3b
 
-## Images
+### 插入图片
+
+使用 `![Alt Text](url)` 格式插入图片：
 
 ```
 ![GitHub Logo](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)
-Format: ![Alt Text](url)
 ```
 
 ![GitHub Logo](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png)
 
-## Links
+### 超链接
+
+插入链接时可以使用纯 URL 或 Markdown 链接格式：
 
 ```
 http://github.com - automatic!
@@ -105,7 +104,9 @@ http://github.com - automatic!
 http://github.com - automatic!
 [GitHub](http://github.com)
 
-## Blockquotes
+### 块引用
+
+使用 `>` 来创建引用文本：
 
 ```
 As Kanye West said:
@@ -119,19 +120,20 @@ As Kanye West said:
 > We're living the future so
 > the present is our past.
 
-## Inline code
+### 行内代码
+
+使用反引号 ` ` 包裹代码：
 
 ```
-I think you should use an
-`<addr>` element here instead.
+I think you should use an `<addr>` element here instead.
 ```
 
 I think you should use an
 `<addr>` element here instead.
 
-## Syntax highlighting
+### 语法高亮
 
-Here’s an example of how you can use syntax highlighting with [GitHub Flavored Markdown](https://help.github.com/articles/basic-writing-and-formatting-syntax/):
+使用 GitHub Flavored Markdown 配合 `mdx-prism` 插件，实现代码高亮：
 
 ````
 ```js:fancyAlert.js
@@ -143,7 +145,7 @@ function fancyAlert(arg) {
 ```
 ````
 
-And here's how it looks - nicely colored with styled code titles!
+效果如下——带有样式代码标题的漂亮颜色！
 
 ```js:fancyAlert.js
 function fancyAlert(arg) {
@@ -153,7 +155,9 @@ function fancyAlert(arg) {
 }
 ```
 
-## Footnotes
+### 脚注
+
+可以通过 [^1] 插入脚注并进行引用：
 
 ```
 Here is a simple footnote[^1]. With some additional text after it.
@@ -165,7 +169,9 @@ Here is a simple footnote[^1]. With some additional text after it.
 
 [^1]: My reference.
 
-## Task Lists
+### 任务列表
+
+创建任务列表时，你可以通过 - [ ] 和 - [x] 来标记任务的完成状态：
 
 ```
 - [x] list syntax required (any unordered or ordered list supported)
@@ -177,9 +183,9 @@ Here is a simple footnote[^1]. With some additional text after it.
 - [x] this is a complete item
 - [ ] this is an incomplete item
 
-## Tables
+### 表格
 
-You can create tables by assembling a list of words and dividing them with hyphens `-` (for the first row), and then separating each column with a pipe `|`:
+通过 | 来创建表格，分隔不同的列：
 
 ```
 | First Header                | Second Header                |
@@ -193,6 +199,9 @@ You can create tables by assembling a list of words and dividing them with hyphe
 | Content from cell 1         | Content from cell 2          |
 | Content in the first column | Content in the second column |
 
-## Strikethrough
+### 删除线
 
-Any word wrapped with two tildes (like `~~this~~`) will appear ~~crossed out~~.
+用 `~~` 包裹文本，实现删除线效果：
+
+~~crossed out~~.
+

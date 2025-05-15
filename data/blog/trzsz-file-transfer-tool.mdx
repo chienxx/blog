@@ -1,0 +1,162 @@
+---
+title: '一个高效的文件传输工具 - trzsz'
+date: '2024-10-16'
+tags: ['trzsz', 'ssh', 'transfer', 'tool']
+draft: false
+summary: '在日常开发和运维工作中，文件传输是一个常见的需求。无论是将本地文件上传到远程服务器，还是从服务器下载文件到本地，传统的工具如 `scp` 和 `rsync` 虽然功能强大，但在某些场景下可能不够便捷。借助 trszs ，它可以帮助你更轻松地完成文件传输任务。'
+layout: PostLayout
+---
+
+## 什么是 trszs？
+
+`trszs` 是一个基于 `tmux` 和 `rz/sz` 的文件传输工具。它结合了 `tmux` 的多终端管理能力和 `rz/sz` 的文件传输功能，使得在远程服务器和本地机器之间传输文件变得更加简单和高效。
+
+## 主要特点
+
+1. **支持大文件传输**：`trszs` 可以处理大文件传输，且传输过程中不会中断。
+2. **断点续传**：如果传输过程中断，`trszs` 支持断点续传，避免重新传输整个文件。
+3. **多文件传输**：支持同时传输多个文件，提高效率。
+4. **进度显示**：实时显示传输进度，方便用户了解传输状态。
+5. **跨平台支持**：`trszs` 可以在 Linux、macOS 和 Windows 上运行，兼容性强。
+
+## 使用指南
+
+### 在远程服务器安装 Trzsz ( go )
+
+- **Ubuntu** 可用 apt 安装
+
+```bash
+sudo apt update && sudo apt install software-properties-common
+sudo add-apt-repository ppa:trzsz/ppa && sudo apt update
+
+sudo apt install trzsz
+```
+
+- **Ubuntu** 可用 apt 安装
+
+```bash
+sudo apt update && sudo apt install software-properties-common
+sudo add-apt-repository ppa:trzsz/ppa && sudo apt update
+
+sudo apt install trzsz
+```
+
+- **Debian** 可用 apt 安装
+
+```bash
+sudo apt install curl gpg
+curl -s 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x7074ce75da7cc691c1ae1a7c7e51d1ad956055ca' \
+    | gpg --dearmor -o /usr/share/keyrings/trzsz.gpg
+echo 'deb [signed-by=/usr/share/keyrings/trzsz.gpg] https://ppa.launchpadcontent.net/trzsz/ppa/ubuntu jammy main' \
+    | sudo tee /etc/apt/sources.list.d/trzsz.list
+sudo apt update
+
+sudo apt install trzsz
+```
+
+- **CentOS** 可用 yum 安装
+
+  - 国内推荐使用 wlnmp 源，安装 trzsz 只需要添加 wlnmp 源（ 配置 epel 源不是必须的 ）
+
+  ```bash
+  curl -fsSL "https://sh.wlnmp.com/wlnmp.sh" | bash
+
+  sudo yum install trzsz
+  ```
+
+  - 也可使用 gemfury 源（ 只要网络通，所有操作系统通用 ）
+
+  ```bash
+  echo '[trzsz]
+  name=Trzsz Repo
+  baseurl=https://yum.fury.io/trzsz/
+  enabled=1
+  gpgcheck=0' | sudo tee /etc/yum.repos.d/trzsz.repo
+
+  sudo yum install trzsz
+  ```
+
+- **ArchLinux** 可用 yay 安装
+
+```bash
+yay -Syu
+yay -S trzsz
+```
+
+### 在本地终端安装 Trzsz-ssh ( tssh )
+
+trzsz-ssh ( tssh ) 设计为 ssh 客户端的直接替代品，提供与 openssh 完全兼容的基础功能，同时实现其他有用的扩展功能。
+
+- **Windows** 可用 scoop / winget / choco 安装
+
+```bash
+##以下三个命令任选其一
+scoop install tssh
+
+winget install tssh
+
+choco install tssh
+```
+
+- **MacOS** 可用 homebrew 安装
+
+```bash
+brew update
+brew install trzsz-ssh
+```
+
+#### 配置 SSH 登录信息
+
+- SSH 配置文件一般是 ~/.ssh/config，在 Windows 中一般是 C:\Users\xxx\.ssh\config（ xxx 要替换成用户名 ）。
+
+- 每台服务器主机以 Host 开头，后面可以跟一个或多个服务器别名，可以根据自己的喜好随便起名，除了空格是用来分隔多个别名的。
+
+- 服务器别名支持通配符 \* 和 ?，当多台服务器主机有相同的配置项时，可以将相同的配置项用一个独立的带通配符的 Host 来配置。
+
+- 最简单的服务器主机只要配置 IP 和登录用户名即可，如果端口不是 22 则要一并配置，其配置项分别是 HostName、User 和 Port。
+
+- 以 # 开头的行是注释，tssh 做了扩展，以 #!! 开头的配置项也是有效配置项，原生 ssh 不兼容的配置项只要加上 #!! 就兼容了。
+
+- 一般测试服务器使用密码登录，支持明文密码，不过建议通过 `tssh --enc-secret 密码` 将密码简单加密后再配置。
+
+- 配置举例：
+
+  ```bash
+    Host alias
+        HostName 192.168.0.1
+        Port 22
+        User login_username
+        ## 明文方式
+        Password 111111
+        ## 加密方式
+        encPassword 756b17766f45bdc44c37f811db9990b0880318d5f00f6531b15e068ef1fde2666550
+  ```
+
+#### 配置主题风格
+
+tssh 支持多种主题风格，在 `~/.tssh.conf` 中配置 `PromptThemeLayout` 选项。
+![config](http://image.jxzsite.com/i/2025/03/11/x60zyw.png)
+
+- **tiny** 小巧风
+  ![tiny](https://image.jxzsite.com/i/2025/03/11/w4dn7x.png)
+- **table** 表格风
+  ![simple](https://image.jxzsite.com/i/2025/03/11/w4dxrj.png)
+- **simple** 简约风
+  ![table](https://image.jxzsite.com/i/2025/03/11/w4dyew.png)
+
+### 文件传输
+
+通过 `tssh` 选择服务器，成功登录后进行文件传输。
+
+- `trz` 上传
+
+![upload](https://image.jxzsite.com/i/2025/03/11/x4oyw2.png)
+
+- `tsz` 下载
+  ![download](https://image.jxzsite.com/i/2025/03/11/x4p5je.png)
+
+## 结语
+trszs 是一个功能强大且易于使用的文件传输工具，特别适合需要在远程服务器和本地机器之间频繁传输文件的用户。通过结合 tmux 和 rz/sz 的功能，trszs 提供了高效、稳定的文件传输体验。如果你还在为文件传输而烦恼，不妨试试 trszs，相信它会成为你的得力助手。  
+
+> [!NOTE] **更多高级用法请参考 [官方文档](https://trzsz.github.io/)**
+

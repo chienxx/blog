@@ -1,0 +1,61 @@
+---
+title: 'DBeaver Ultimate 通用激活方法'
+date: '2025-05-07'
+tags: ['DBeaver', 'guide', 'database']
+draft: false
+summary: 'DBeaver 是一款功能强大且流行的开源数据库管理工具和 SQL 客户端，支持多种数据库系统，目前已成为许多开发者和数据库管理员的首选工具之一。社区版已能满足大多数基本需求，而旗舰版则提供了更多高级功能。
+layout: PostLayout
+---
+
+## 安装激活指南
+
+### 下载步骤
+
+- 下载安装 [DBeaver Ultimate](https://dbeaver.com/dbeaver-ultimate/)
+- 获取 [agent jar](https://1drv.ms/u/s!Atf-z4aXHKwckTxu695meh8prDSn?e=bXfk6R) 包
+
+### 配置说明
+
+编辑安装目录下的 `dbeaver.ini` 文件，在文件末尾添加下面配置。
+
+**路径示例：**
+
+- MacOS:
+
+```bash
+-javaagent:/Users/yourusername/dbeaver-agent.jar
+-Dlm.debug.mode=true
+```
+
+- Windows:
+
+```bash
+-javaagent:C:\Users\yourusername\dbeaver-agent.jar
+-Dlm.debug.mode=true
+```
+
+> [!NOTE] **对于最新25版本，需要将JDK调整为21**
+
+![config](https://image.jxzsite.com/i/2025/05/08/m71zue.png)
+
+### 激活步骤
+
+- 启动DBeaver
+- 输入提供的激活码完成激活
+
+```bash
+aYhAFjjtp3uQZmeLzF3S4H6eTbOgmru0jxYErPCvgmkhkn0D8N2yY6ULK8oT3fnpoEu7GPny7csN
+sXL1g+D+8xR++/L8ePsVLUj4du5AMZORr2xGaGKG2rXa3NEoIiEAHSp4a6cQgMMbIspeOy7dYWX6
+99Fhtpnu1YBoTmoJPaHBuwHDiOQQk5nXCPflrhA7lldA8TZ3dSUsj4Sr8CqBQeS+2E32xwSniymK
+7fKcVX75qnuxhn7vUY7YL2UY7EKeN/AZ+1NIB6umKUODyOAFIc8q6zZT8b9aXqXVzwLJZxHbEgcO
+8lsQfyvqUgqD6clzvFry9+JwuQsXN0wW26KDQA==
+```
+
+- 修改本机 HOST 文件
+
+```bash
+127.0.0.1 dbeaver.com
+```
+
+![config](https://image.jxzsite.com/i/2025/05/08/m729eu.png)
+

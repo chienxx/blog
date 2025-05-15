@@ -1,0 +1,233 @@
+---
+title: '深入了解 VPS：定义、用途与配置'
+date: '2023-11-06'
+tags: ['vps', 'linux', 'server']
+draft: false
+summary: '在当今的互联网世界，虚拟专用服务器（VPS，Virtual Private Server）已成为开发者、企业和技术爱好者的重要工具。无论是用于部署网站、搭建个人云，还是进行更复杂的应用开发和测试，VPS 都能提供高效、灵活且经济的解决方案。在这篇博客中，我们将深入探讨 VPS 的定义、常见用途以及如何选择合适的配置来满足不同需求。'
+---
+
+## 什么是 VPS？
+
+VPS，顾名思义，是通过虚拟化技术将一台物理服务器划分成多个相互独立的虚拟服务器。每个 VPS 都拥有独立的操作系统、专用的 CPU、内存、存储空间以及网络带宽等资源，用户可以像使用独立服务器一样进行管理和配置。
+
+## VPS 与共享主机 vs 独立服务器
+
+与传统的共享主机不同，VPS 不与其他用户共享资源，每个 VPS 都有自己的虚拟环境。这使得 VPS 在性能和安全性方面，比共享主机更具优势。
+
+另一方面，VPS 和独立服务器也有所区别。独立服务器是指用户租用整台物理服务器，拥有完整的硬件资源，而 VPS 只是虚拟化出来的“分身”，共享物理服务器的硬件资源。这使得 VPS 成为比独立服务器更经济实惠的选择，尤其适合中小型企业和个人开发者。
+
+## VPS 的主要用途
+
+VPS 的灵活性和高性价比使其成为多种应用场景的理想选择，以下是一些常见的 VPS 用途：
+
+- 网站托管与部署
+  VPS 是托管网站和应用的常见选择，尤其适合需要较高性能和灵活性的网站。与共享主机相比，VPS 提供了更多的自定义选项和更高的性能。此外，VPS 允许用户安装任何所需的软件，支持多种操作系统（如 Linux、Windows Server 等），并能根据需求扩展资源。
+
+- 个人云服务
+  VPS 也可以作为私人云服务器，帮助用户搭建文件存储、备份、同步等服务。例如，使用 Nextcloud 或 ownCloud 等开源软件，你可以轻松地搭建个人云系统，享受私有数据存储的安全和便捷。
+
+- 虚拟私人网络（VPN）
+  通过在 VPS 上搭建 VPN 服务，用户能够加密互联网连接，保护隐私，绕过地理限制。VPS 提供的稳定性和高带宽，使其成为部署 VPN 的理想平台。
+
+- 开发与测试环境
+  对于开发者而言，VPS 提供了一个理想的环境来进行软件开发、部署和测试。可以创建多个 VPS 实例来模拟不同的生产环境，进行负载均衡、数据库管理等操作，充分保障开发的灵活性和安全性。
+
+- 游戏服务器
+  许多游戏爱好者会选择 VPS 来搭建自己的游戏服务器，尤其是一些需要低延迟和高带宽的在线多人游戏。VPS 为游戏服务器提供了稳定的运行环境，并允许玩家自定义配置和管理。
+
+> [!CAUTION] **下面的操作命令基于 `Debian` 系统**
+
+## 初始配置
+
+- 安装常用工具和软件包
+
+```bash
+apt-get update
+apt-get install sudo vim telnet wget
+```
+
+- 解决vim粘贴内容自动空格
+
+```bash
+wget --no-check-certificate https://raw.githubusercontent.com/vim/vim/master/runtime/vimrc_example.vim -O ~/.vimrc
+echo 'set mouse=""' >> ~/.vimrc
+```
+
+## 安全性配置
+
+默认情况下，SSH 服务会监听在 22 端口上，这使得它成为攻击者扫描的首选目标。因此，修改 SSH 默认端口是一项基本的安全措施，可以有效降低暴力破解的风险。
+
+### 修改默认 SSH 端口
+
+- 编辑 SSH 配置文件，找到 Port 22 配置项，修改为一个不常用的端口（例如 2222 或 1022）：
+  ```bash
+  vim /etc/ssh/sshd_config
+  ```
+- 保存并关闭文件，重启 SSH 服务：
+  ```bash
+  service ssh restart
+  ```
+
+### 配置防火墙
+
+使用防火墙（如 ufw 或 iptables）来限制哪些 IP 地址可以访问 VPS 是增强安全的另一个重要步骤。
+
+#### 设置 ufw 防火墙：
+
+- 允许 SSH（修改后的端口）：
+
+```bash
+ufw allow 2222/tcp
+```
+
+- 启用防火墙：
+
+```bash
+ufw enable
+```
+
+### 关闭 root 远程登录
+
+> [!CAUTION] > **在禁止 root 登录前，必须确保已经创建了一个子用户，测试连接并登录成功**
+
+关闭 root 远程登录能有效防止暴力破解、减少误操作、增强审计性，提高服务器安全性。
+
+- 编辑 SSH 配置文件
+
+```bash
+sudo vim /etc/ssh/sshd_config
+```
+
+- 找到如下配置：
+
+```bash
+#PermitRootLogin yes 修改为 PermitRootLogin no
+```
+
+- 重启 SSH 服务
+``` bash
+systemctl restart sshd
+````
+
+### 启用双因子认证 Google Authenticator
+
+- 服务端安装
+```bash
+  apt-get install libpam-google-authenticator
+````
+
+- 手机端下载安装 `Google Authenticator` 应用
+- 服务端执行 `google-authenticator` 后出现 `Do you want authentication tokens to be time-based (y/n)` ,输入y 后保存秘钥和通用验证码
+- 手机端扫描二维码保存信息，会生成动态验证码
+- 服务端开启二次验证
+
+  - 编辑 `sshd` 文件
+
+  ```bash
+  vim /etc/pam.d/sshd
+  ```
+
+  在 `account required pam_nologin.so` 的下一行增加以下代码
+
+  ```
+  auth required pam_google_authenticator.so
+  ```
+
+  - 编辑 `sshd_config` 文件
+
+  ```bash
+  vim /etc/ssh/sshd_config
+  ```
+
+  将 `ChallengeResponseAuthentication/KbdInteractiveAuthentication` 改为 `yes`
+
+  - 重启 SSH 服务
+
+  ```bash
+  service ssh restart
+  ```
+
+  - 验证码二次验证
+    ![auth](https://image.jxzsite.com/i/2025/02/24/qucdb9.png)
+
+_**通过以上设置，可以大大提高你的 VPS 安全性，防止未经授权的访问和攻击。**_
+
+## 安装 Docker 和 Docker Compose
+
+Docker 是一个开源的容器化平台，可以帮助你在不同的环境中运行应用程序，而不需要担心环境差异。Docker Compose 是一个工具，它允许你定义和运行多容器 Docker 应用程序。通过 Docker 和 Docker Compose，你可以轻松构建、测试和部署应用程序。
+
+### 安装Docker
+
+- 更新系统包：
+
+```bash
+apt-get update
+```
+
+- 安装必要的依赖包：
+
+```bash
+apt-get install ca-certificates curl
+install -m 0755 -d /etc/apt/keyrings
+```
+
+- 添加 Docker 官方 GPG 密钥：
+
+```bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+```
+
+- 授权用户读取 Docker 的 GPG 密钥：
+
+```bash
+chmod a+r /etc/apt/keyrings/docker.asc
+```
+
+- 添加 Docker 仓库：
+
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+- 更新系统并安装 Docker：
+
+```bash
+apt update
+apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+- 验证 Docker 安装成功：
+
+```bash
+docker --version
+```
+
+### 安装 Docker Compose
+
+Docker Compose 是一个工具，它允许你通过 YAML 配置文件定义多个容器的应用程序，并在一个命令下启动这些容器。
+
+- 下载 Docker Compose：
+
+```bash
+curl -SL https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+```
+
+- 授予可执行权限：
+
+```bash
+chmod +x /usr/local/bin/docker-compose
+```
+
+- 验证 Docker Compose 安装成功：
+
+```bash
+docker-compose --version
+```
+
+## 结语
+
+通过本文介绍的几项安全性配置（如修改 SSH 默认端口、启用二次验证、配置防火墙等）以及 Docker 和 Docker Compose 的安装与配置，你的 VPS 不仅会更加安全，而且能够更高效地支持容器化应用程序的部署和管理。
+
