@@ -28,13 +28,14 @@ export default function MomentCard({ moment }: MomentProps) {
   return (
     <div className="group">
       <div className="flex items-center mb-3">
-        <div className="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
-          <span className="text-primary-500 dark:text-primary-300 text-sm font-medium">
-            {dateObj.getDate()}
-          </span>
+        <div className="flex items-center text-sm">
+          <svg className="w-4 h-4 text-primary-500 dark:text-primary-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          
+          <div className="ml-3 text-sm text-gray-500 dark:text-gray-400 pl-3 border-l border-gray-200 dark:border-gray-700">
+          <time dateTime={date} className="font-medium">{formattedDate}</time>
         </div>
-        <div className="ml-3 text-sm text-gray-500 dark:text-gray-400">
-          <time dateTime={date}>{formattedDate}</time>
         </div>
       </div>
       
@@ -64,4 +65,4 @@ export default function MomentCard({ moment }: MomentProps) {
       </div>
     </div>
   )
-} 
+}
