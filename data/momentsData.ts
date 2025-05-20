@@ -1,15 +1,10 @@
-export interface Moment {
-  id: string
-  date: string
-  content: string
-  imageUrl?: string
-}
+import type { Moment } from './types/data.ts'
 
-const momentsData: Moment[] = [
+export const momentsData: Moment[] = [
   {
     id: '1',
-    date: '2024-07-05T14:30:25',
-    content: '今天学习了React的新特性，感觉收获颇丰！React的Concurrent Mode和Suspense特性让异步渲染变得更加简单和高效。我特别喜欢新的Hook API设计，使得代码更加清晰和可维护。接下来计划深入学习Server Components的应用场景。',
+    date: '2024-06-05T14:30:25',
+    content: '今天学习了React22的新特性，感觉收获颇丰！React的Concurrent Mode和Suspense特性让异步渲染变得更加简单和高效。我特别喜欢新的Hook API设计，使得代码更加清晰和可维护。接下来111计划深入学习Server Components的应用场景。',
     imageUrl: '/static/images/moments/food.jpg',
   },
   {
@@ -20,7 +15,7 @@ const momentsData: Moment[] = [
   {
     id: '3',
     date: '2024-06-25T16:45:33',
-    content: '参加了一场线上技术分享会，对云原生有了更深的理解。分享会中讨论了Kubernetes的最佳实践和性能优化技巧，还介绍了如何使用Istio实现更复杂的服务网格功能。演讲者分享了他们如何在生产环境中处理大规模部署的经验，这些实践经验对我后续的项目非常有帮助。',
+    content: '参加了一场线上技术分享会，对云原生有了更深11的理解。分享会中讨论了Kubernetes的最佳实践和性能优化技巧，还介绍了如何使用Istio实现更复杂的服务网格功能。演讲者分享了他们如何在生产环境中处理大规模部署的经验，这些实践经验对我后续的项目非常有帮助。',
     imageUrl: '/static/images/moments/food.jpg',
   },
   {
@@ -50,5 +45,3 @@ const momentsData: Moment[] = [
     content: '今天参加了一个开源项目的贡献者会议，认识了许多志同道合的开发者。讨论了项目的路线图和即将到来的功能，我主动承担了几个issue的修复工作。能够为开源社区做出贡献真的很有意义！',
   },
 ]
-
-export default momentsData 

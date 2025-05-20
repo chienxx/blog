@@ -18,6 +18,13 @@ export type Tool = {
   label?: string
 }
 
+export type Moment = {
+  id: string
+  date: string
+  content: string
+  imageUrl?: string
+}
+
 export interface ViewApiResponse {
   data?: {
     total: string

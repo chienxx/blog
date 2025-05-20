@@ -1,7 +1,7 @@
 import { genPageMetadata } from 'app/seo'
 import MomentCard from '../../../../components/MomentCard'
 import { Metadata } from 'next'
-import momentsData from '@/data/momentsData'
+import { momentsData } from '@/data/momentsData'
 import Link from '@/components/Link'
 import { notFound } from 'next/navigation'
 
