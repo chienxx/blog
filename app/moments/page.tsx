@@ -69,7 +69,7 @@ export default function MomentsPage() {
           Moments
         </h1>
         <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-          记录生活的点滴，分享我的日常所思所想...
+          记录生活的点滴，分享我的日常所思所想
         </p>
       </div>
 

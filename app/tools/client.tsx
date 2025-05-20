@@ -16,7 +16,7 @@ const LabelSwitcher = () => {
           Tools
         </h1>
         <p className="mt-4 text-lg leading-7 text-gray-500 dark:text-gray-400">
-          Some tools I use on a daily basis.
+          分享一些我日常使用的工具
         </p>
       </div>
       <div className="mb-8 flex justify-center space-x-12">
