@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { genPageMetadata } from 'app/seo'
-import momentsData from '@/data/momentsData'
+import { momentsData } from '@/data/momentsData'
 import Image from 'next/image'
 import Link from '@/components/Link'
 import { Metadata } from 'next'
