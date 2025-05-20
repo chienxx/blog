@@ -1,4 +1,3 @@
-
 import type { Moment } from './types/data.ts'
 
 export const momentsData: Moment[] = [

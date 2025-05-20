@@ -1,6 +1,12 @@
 import Image from 'next/image'
 import Link from '@/components/Link'
-import { Moment } from '@/data/momentsData'
+
+interface Moment {
+  id: string
+  date: string
+  content: string
+  imageUrl?: string
+}
 
 interface MomentProps {
   moment: Moment

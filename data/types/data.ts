@@ -9,16 +9,16 @@ export type SpotifyNowPlayingData = {
   albumImageUrl?: string
 }
 
-export type Tool = {
+export interface Tool {
   title: string
   category: string
+  label: string
   description: string
-  imgSrc?: string
-  href?: string
-  label?: string
+  imgSrc: string
+  href: string
 }
 
-export type Moment = {
+export interface Moment {
   id: string
   date: string
   content: string
