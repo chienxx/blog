@@ -7,12 +7,12 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import ReactMediumImageZoom, { type UncontrolledProps } from 'react-medium-image-zoom'
 
-let loadedImages: string[] = []
+const loadedImages: string[] = []
 
 function useImageLoadedState(src: string) {
-  let pathname = usePathname()
-  let uniqueImagePath = pathname + '__' + src
-  let [loaded, setLoaded] = useState(() => loadedImages.includes(uniqueImagePath))
+  const pathname = usePathname()
+  const uniqueImagePath = pathname + '__' + src
+  const [loaded, setLoaded] = useState(() => loadedImages.includes(uniqueImagePath))
   return [
     loaded,
     () => {
@@ -28,8 +28,8 @@ export interface ImageProps extends Omit<NextImageProps, 'src' | 'priority'> {
 }
 
 export function Image(props: ImageProps) {
-  let { alt, src, loading = 'lazy', style, className, ...rest } = props
-  let [loaded, onLoad] = useImageLoadedState(src)
+  const { alt, src, loading = 'lazy', style, className, ...rest } = props
+  const [loaded, onLoad] = useImageLoadedState(src)
 
   return (
     <div
@@ -63,7 +63,7 @@ interface ZoomProps extends UncontrolledProps {
 }
 
 export function Zoom(props: ZoomProps) {
-  let { children, classDialog, ...rest } = props
+  const { children, classDialog, ...rest } = props
   return (
     <ReactMediumImageZoom
       zoomMargin={20}
