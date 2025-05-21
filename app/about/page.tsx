@@ -154,7 +154,7 @@ export default function ChangelogPage() {
                     联系方式
                   </h3>
                   <p className="mb-4 text-gray-600 dark:text-gray-400">
-                    有任何问题或建议？请随时与我们联系
+                    有任何问题或建议？请随时与我联系
                   </p>
                   <div className="flex items-center space-x-2">
                     <svg
