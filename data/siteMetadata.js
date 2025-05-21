@@ -3,8 +3,7 @@ const siteMetadata = {
   title: `Kanade's Dev Journal | Tech, Life & Insights`,
   author: 'Kanade',
   headerTitle: `Kanade's Dev Journal`,
-  description:
-    '欢迎浏览我的个人博客，在这里我会分享对软件开发、计算机技术以及日常生活点滴的思考',
+  description: '欢迎浏览我的个人博客，在这里我会分享对软件开发、计算机技术以及日常生活点滴的思考',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',

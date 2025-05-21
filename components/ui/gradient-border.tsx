@@ -27,7 +27,7 @@ export function GradientBorder({
       />
       <span
         className={clsx([
-          'absolute -left-px top-[--offset] h-[40%] w-px',
+          'absolute top-[--offset] -left-px h-[40%] w-px',
           'bg-gradient-to-b from-indigo-500/0 via-indigo-500/40 to-indigo-500/0',
           'dark:from-indigo-400/0 dark:via-indigo-400/40 dark:to-indigo-400/0',
         ])}

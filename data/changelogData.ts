@@ -11,9 +11,7 @@ export const changelog = [
   {
     date: '2024-06-15',
     version: 'v1.2.0',
-    changes: [
-      { type: '优化', description: '改进了整体页面加载速度' },
-    ],
+    changes: [{ type: '优化', description: '改进了整体页面加载速度' }],
   },
   {
     date: '2024-05-28',

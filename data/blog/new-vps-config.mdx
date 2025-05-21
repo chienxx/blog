@@ -105,16 +105,18 @@ sudo vim /etc/ssh/sshd_config
 ```
 
 - 重启 SSH 服务
-``` bash
+
+```bash
 systemctl restart sshd
-````
+```
 
 ### 启用双因子认证 Google Authenticator
 
 - 服务端安装
+
 ```bash
   apt-get install libpam-google-authenticator
-````
+```
 
 - 手机端下载安装 `Google Authenticator` 应用
 - 服务端执行 `google-authenticator` 后出现 `Do you want authentication tokens to be time-based (y/n)` ,输入y 后保存秘钥和通用验证码
@@ -230,4 +232,3 @@ docker-compose --version
 ## 结语
 
 通过本文介绍的几项安全性配置（如修改 SSH 默认端口、启用二次验证、配置防火墙等）以及 Docker 和 Docker Compose 的安装与配置，你的 VPS 不仅会更加安全，而且能够更高效地支持容器化应用程序的部署和管理。
-

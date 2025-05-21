@@ -4,7 +4,7 @@ export const momentsData: Moment[] = [
   {
     id: '1',
     date: '2022-09-01T21:03:11',
-    
+
     content: '别跪了，连猫都站起来了。',
     imageUrl: '/static/images/moments/cat.jpg',
   },
@@ -37,5 +37,5 @@ export const momentsData: Moment[] = [
     date: '2025-02-09T22:35:27',
     content: '手机相册里翻到2021年装机的照片，想起那时候的显卡和内存价格，心在滴血...',
     imageUrl: '/static/images/moments/diypc.jpg',
-  }  
+  },
 ]

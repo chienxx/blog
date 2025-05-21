@@ -12,7 +12,7 @@ const LabelSwitcher = () => {
   return (
     <div className="container mx-auto py-10">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+        <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
           Tools
         </h1>
         <p className="mt-4 text-lg leading-7 text-gray-500 dark:text-gray-400">
@@ -21,7 +21,7 @@ const LabelSwitcher = () => {
       </div>
       <div className="mb-8 flex justify-center space-x-12">
         <button
-          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 cursor-pointer ${
+          className={`flex cursor-pointer items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 ${
             activeTab === 'iOS'
               ? 'bg-green-500 text-white'
               : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
@@ -34,7 +34,7 @@ const LabelSwitcher = () => {
           iOS
         </button>
         <button
-          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 cursor-pointer ${
+          className={`flex cursor-pointer items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 ${
             activeTab === 'macOS'
               ? 'bg-green-500 text-white'
               : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
@@ -50,7 +50,7 @@ const LabelSwitcher = () => {
           macOS
         </button>
         <button
-          className={`flex items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 cursor-pointer ${
+          className={`flex cursor-pointer items-center rounded-lg px-4 py-2 font-semibold transition-colors duration-300 ${
             activeTab === 'Web'
               ? 'bg-green-500 text-white'
               : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
