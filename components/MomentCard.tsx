@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from '@/components/Link'
+import FormattedText from '@/components/FormattedText'
 
 interface Moment {
   id: string
@@ -27,9 +28,17 @@ export default function MomentCard({ moment }: MomentProps) {
     hour12: false,
   })
 
-  // 截断内容，如果超过120个字符
-  const isLongContent = content.length > 120
-  const displayContent = isLongContent ? content.slice(0, 120) + '...' : content
+  // 检查是否需要截断
+  const isLongContent = content.length > 120 || content.includes('\n')
+  
+  // 更智能的判断逻辑：
+  // 1. 内容被截断了（长度超过120字符或包含换行）
+  // 2. 或者内容包含格式化标记（**、*、`、[]()）
+  // 3. 或者内容长度超过20字符（给大部分有意义的内容提供详情页）
+  const hasFormatting = /\*\*.*?\*\*|\*.*?\*|`.*?`|\[.*?\]\(.*?\)/.test(content)
+  const shouldShowDetails = true // 所有动态都显示"查看详情"链接
+  // 如果只想在特定条件下显示，可以使用：isLongContent || hasFormatting || content.length > 20
+  // const shouldShowDetails = isLongContent || hasFormatting || content.length > 20
 
   return (
     <div className="group">
@@ -63,26 +72,32 @@ export default function MomentCard({ moment }: MomentProps) {
         {/* 文字内容 */}
         <div className={`flex-1 ${imageUrl ? 'min-w-0' : ''}`}>
           <div className="prose mb-4 max-w-none text-gray-700 dark:text-gray-300">
-            <p className="leading-relaxed">{displayContent}</p>
+            <FormattedText 
+              content={content} 
+              isPreview={true} 
+              maxLength={120}
+            />
           </div>
           
-          {/* 查看详情链接 */}
-          <div className="flex items-center justify-start">
-            <Link
-              href={`/moments/${id}`}
-              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-sm font-medium transition-colors inline-flex items-center group/link"
-            >
-              查看详情 
-              <svg 
-                className="ml-1 h-3 w-3 transition-transform group-hover/link:translate-x-0.5" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
+          {/* 查看详情链接 - 只在内容被截断时显示 */}
+          {shouldShowDetails && (
+            <div className="flex items-center justify-start">
+              <Link
+                href={`/moments/${id}`}
+                className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-sm font-medium transition-colors inline-flex items-center group/link"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
+                查看详情 
+                <svg 
+                  className="ml-1 h-3 w-3 transition-transform group-hover/link:translate-x-0.5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* 图片 - 优化尺寸和位置 */}

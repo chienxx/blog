@@ -4,21 +4,21 @@ export const changelog = [
     date: '2025-03-25',
     version: 'v1.3.0',
     changes: [
-      { type: '新增', description: '增加博客更新日志记录' },
+      { type: '新增', description: '记录博客更新日志' },
       { type: '修复', description: '升级nextjs版本，修复安全漏洞' },
     ],
   },
   {
     date: '2024-06-15',
     version: 'v1.2.0',
-    changes: [{ type: '优化', description: '改进了整体页面加载速度' }],
+    changes: [{ type: '优化', description: '改进了动态页面样式布局，支持灵活和丰富的文字内容显示' }],
   },
   {
     date: '2024-05-28',
     version: 'v1.1.0',
     changes: [
       { type: '新增', description: '增加动态导航栏' },
-      { type: '优化', description: '美化工具卡片页面样式' },
+      { type: '优化', description: '美化工具页面卡片样式' },
     ],
   },
   {

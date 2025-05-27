@@ -4,6 +4,7 @@ import { momentsData } from '@/data/momentsData'
 import Image from 'next/image'
 import Link from '@/components/Link'
 import { Metadata } from 'next'
+import FormattedText from '@/components/FormattedText'
 
 interface MomentPageProps {
   params: Promise<{
@@ -86,7 +87,11 @@ export default async function MomentPage({ params }: MomentPageProps) {
 
           <div className="mb-8">
             <div className="prose prose-lg dark:prose-dark max-w-none">
-              <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">{moment.content}</p>
+              <FormattedText 
+                content={moment.content} 
+                isPreview={false}
+                className="text-lg leading-relaxed text-gray-700 dark:text-gray-300"
+              />
             </div>
           </div>
 
