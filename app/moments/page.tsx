@@ -9,9 +9,8 @@ export const metadata: Metadata = genPageMetadata({ title: 'Moments' })
 // 每页显示的动态数量
 const MOMENTS_PER_PAGE = 5
 
-// 分页组件
+// 分页组件 - 与blog页面样式保持一致
 function Pagination({ totalPages, currentPage }: { totalPages: number; currentPage: number }) {
-  const basePath = 'moments'
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 
@@ -64,8 +63,9 @@ export default function MomentsPage() {
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      {/* 页面标题 */}
       <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-        <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+        <h1 className="bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-3xl font-extrabold leading-9 tracking-tight text-transparent sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:from-primary-400 dark:to-primary-600">
           Moments
         </h1>
         <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
@@ -73,17 +73,16 @@ export default function MomentsPage() {
         </p>
       </div>
 
-      <div className="py-12">
-        <div className="space-y-10">
+      {/* 动态列表 */}
+      <div className="py-8">
+        <div className="space-y-8">
           {currentMoments.map((moment, index) => (
-            <div
+            <article
               key={moment.id}
-              className={`rounded-xl border border-gray-100 bg-white p-6 shadow-md transition-all duration-300 hover:shadow-lg dark:border-gray-800 dark:bg-gray-900 ${
-                index % 2 === 0 ? 'transform hover:-translate-y-1' : 'transform hover:translate-y-1'
-              }`}
+              className="group rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:border-gray-200 hover:shadow-md sm:p-8 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
             >
               <MomentCard moment={moment} />
-            </div>
+            </article>
           ))}
         </div>
 

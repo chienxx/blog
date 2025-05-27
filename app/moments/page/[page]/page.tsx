@@ -19,59 +19,24 @@ export const generateStaticParams = async () => {
   return paths.filter((path) => path.page !== '1')
 }
 
-// 分页组件
+// 分页组件 - 与blog页面样式保持一致
 function Pagination({ totalPages, currentPage }: { totalPages: number; currentPage: number }) {
-  const basePath = 'moments'
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
 
   return (
-    <div className="mt-10 border-t border-gray-200 pt-6 dark:border-gray-800">
-      <nav className="flex items-center justify-between">
+    <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+      <nav className="flex justify-between">
         {!prevPage && (
-          <button
-            className="cursor-auto text-gray-400 disabled:opacity-50 dark:text-gray-600"
-            disabled={!prevPage}
-          >
-            <span className="inline-flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mr-1 h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              Previous
-            </span>
+          <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
+            Previous
           </button>
         )}
         {prevPage && (
           <Link
             href={currentPage - 1 === 1 ? `/moments` : `/moments/page/${currentPage - 1}`}
             rel="prev"
-            className="inline-flex items-center transition-colors"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="mr-1 h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
             Previous
           </Link>
         )}
@@ -79,45 +44,13 @@ function Pagination({ totalPages, currentPage }: { totalPages: number; currentPa
           {currentPage} of {totalPages}
         </span>
         {!nextPage && (
-          <button
-            className="cursor-auto text-gray-400 disabled:opacity-50 dark:text-gray-600"
-            disabled={!nextPage}
-          >
-            <span className="inline-flex items-center">
-              Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="ml-1 h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </span>
+          <button className="cursor-auto disabled:opacity-50" disabled={!nextPage}>
+            Next
           </button>
         )}
         {nextPage && (
-          <Link
-            href={`/moments/page/${currentPage + 1}`}
-            rel="next"
-            className="text-primary-500 hover:text-primary-600 inline-flex items-center transition-colors"
-          >
+          <Link href={`/moments/page/${currentPage + 1}`} rel="next">
             Next
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="ml-1 h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
           </Link>
         )}
       </nav>
@@ -157,8 +90,9 @@ export default async function MomentsPage({ params }: PageParams) {
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
-      <div className="space-y-2 pt-6 pb-10 md:space-y-5">
-        <h1 className="from-primary-500 to-primary-700 dark:from-primary-400 dark:to-primary-600 bg-gradient-to-r bg-clip-text text-3xl leading-9 font-extrabold tracking-tight text-gray-900 text-transparent sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+      {/* 页面标题 */}
+      <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+        <h1 className="bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-3xl font-extrabold leading-9 tracking-tight text-transparent sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:from-primary-400 dark:to-primary-600">
           Moments
         </h1>
         <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
@@ -166,15 +100,16 @@ export default async function MomentsPage({ params }: PageParams) {
         </p>
       </div>
 
-      <div className="py-12">
-        <div className="space-y-12">
+      {/* 动态列表 */}
+      <div className="py-8">
+        <div className="space-y-8">
           {currentMoments.map((moment) => (
-            <div
+            <article
               key={moment.id}
-              className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg sm:p-8 dark:border-gray-800 dark:bg-gray-900"
+              className="group rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:border-gray-200 hover:shadow-md sm:p-8 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
             >
               <MomentCard moment={moment} />
-            </div>
+            </article>
           ))}
         </div>
 
