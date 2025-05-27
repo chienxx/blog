@@ -73,7 +73,7 @@ export default function ChangelogPage() {
                           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {release.version}
                           </h2>
-                          
+
                           <span className="ml-4 text-sm font-medium text-gray-500 dark:text-gray-400">
                             {formatDate(release.date)}
                           </span>

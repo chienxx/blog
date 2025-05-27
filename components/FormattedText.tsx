@@ -21,10 +21,10 @@ function processTextFormatting(text: string): React.JSX.Element {
   // 创建一个函数来处理所有格式
   const processFormats = (inputText: string) => {
     const parts: React.ReactNode[] = []
-    
+
     // 简单的处理方式：按顺序处理每种格式
     const segments = inputText.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`|\[.*?\]\(.*?\))/g)
-    
+
     segments.forEach((segment, index) => {
       if (segment.match(boldRegex)) {
         const content = segment.replace(/\*\*/g, '')
@@ -36,16 +36,16 @@ function processTextFormatting(text: string): React.JSX.Element {
       } else if (segment.match(italicRegex) && !segment.match(boldRegex)) {
         const content = segment.replace(/\*/g, '')
         parts.push(
-          <em key={`italic-${index}`} className="italic text-gray-800 dark:text-gray-200">
+          <em key={`italic-${index}`} className="text-gray-800 italic dark:text-gray-200">
             {content}
           </em>
         )
       } else if (segment.match(codeRegex)) {
         const content = segment.replace(/`/g, '')
         parts.push(
-          <code 
-            key={`code-${index}`} 
-            className="rounded bg-gray-100 px-1.5 py-0.5 text-sm font-mono text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+          <code
+            key={`code-${index}`}
+            className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200"
           >
             {content}
           </code>
@@ -55,7 +55,7 @@ function processTextFormatting(text: string): React.JSX.Element {
         if (match) {
           const [, linkText, linkUrl] = match
           parts.push(
-            <a 
+            <a
               key={`link-${index}`}
               href={linkUrl}
               target="_blank"
@@ -70,7 +70,7 @@ function processTextFormatting(text: string): React.JSX.Element {
         parts.push(segment)
       }
     })
-    
+
     return parts
   }
 
