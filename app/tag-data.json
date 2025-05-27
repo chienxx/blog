@@ -1,6 +1,9 @@
 {
+  "mac": 1,
+  "battery": 1,
+  "guide": 7,
+  "optimization": 1,
   "dbeaver": 1,
-  "guide": 6,
   "database": 1,
   "docker": 3,
   "password": 1,

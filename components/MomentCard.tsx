@@ -30,7 +30,7 @@ export default function MomentCard({ moment }: MomentProps) {
 
   // 检查是否需要截断
   const isLongContent = content.length > 120 || content.includes('\n')
-  
+
   // 更智能的判断逻辑：
   // 1. 内容被截断了（长度超过120字符或包含换行）
   // 2. 或者内容包含格式化标记（**、*、`、[]()）
@@ -72,28 +72,29 @@ export default function MomentCard({ moment }: MomentProps) {
         {/* 文字内容 */}
         <div className={`flex-1 ${imageUrl ? 'min-w-0' : ''}`}>
           <div className="prose mb-4 max-w-none text-gray-700 dark:text-gray-300">
-            <FormattedText 
-              content={content} 
-              isPreview={true} 
-              maxLength={120}
-            />
+            <FormattedText content={content} isPreview={true} maxLength={120} />
           </div>
-          
+
           {/* 查看详情链接 - 只在内容被截断时显示 */}
           {shouldShowDetails && (
             <div className="flex items-center justify-start">
               <Link
                 href={`/moments/${id}`}
-                className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-sm font-medium transition-colors inline-flex items-center group/link"
+                className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 group/link inline-flex items-center text-sm font-medium transition-colors"
               >
-                查看详情 
-                <svg 
-                  className="ml-1 h-3 w-3 transition-transform group-hover/link:translate-x-0.5" 
-                  fill="none" 
-                  stroke="currentColor" 
+                查看详情
+                <svg
+                  className="ml-1 h-3 w-3 transition-transform group-hover/link:translate-x-0.5"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </Link>
             </div>

@@ -8,6 +8,16 @@ export const metadata: Metadata = {
   description: '博客的更新记录和功能变更',
 }
 
+// 格式化日期为 "April 26, 2025" 格式
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
 // 渲染标签组件
 const Tag = ({ type }: { type: ChangeType }) => {
   const tagConfig = tagTypeMap[type] || tagTypeMap['发布']
@@ -63,8 +73,9 @@ export default function ChangelogPage() {
                           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             {release.version}
                           </h2>
-                          <span className="ml-4 text-sm text-gray-500 dark:text-gray-400">
-                            {release.date}
+                          
+                          <span className="ml-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {formatDate(release.date)}
                           </span>
                         </div>
 

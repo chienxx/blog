@@ -11,7 +11,9 @@ export const changelog = [
   {
     date: '2024-06-15',
     version: 'v1.2.0',
-    changes: [{ type: '优化', description: '改进了动态页面样式布局，支持灵活和丰富的文字内容显示' }],
+    changes: [
+      { type: '优化', description: '改进了动态页面样式布局，支持灵活和丰富的文字内容显示' },
+    ],
   },
   {
     date: '2024-05-28',

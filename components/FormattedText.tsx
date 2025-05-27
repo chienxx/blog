@@ -18,14 +18,9 @@ function processTextFormatting(text: string): React.JSX.Element {
   // 处理链接格式 [文本](链接)
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
 
-  let processedText = text
-  const elements: React.ReactNode[] = []
-  let lastIndex = 0
-
   // 创建一个函数来处理所有格式
   const processFormats = (inputText: string) => {
     const parts: React.ReactNode[] = []
-    let currentIndex = 0
     
     // 简单的处理方式：按顺序处理每种格式
     const segments = inputText.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`|\[.*?\]\(.*?\))/g)
@@ -91,7 +86,7 @@ function smartTruncate(content: string, maxLength: number): { text: string; isTr
   // 尝试在句号、感叹号、问号处截断
   const sentences = content.match(/[^。！？]*[。！？]/g) || []
   let currentLength = 0
-  let truncatedSentences: string[] = []
+  const truncatedSentences: string[] = []
 
   for (const sentence of sentences) {
     if (currentLength + sentence.length <= maxLength) {
@@ -108,7 +103,7 @@ function smartTruncate(content: string, maxLength: number): { text: string; isTr
 
   // 如果没有合适的句子截断点，尝试在空格处截断
   const words = content.split(' ')
-  let truncatedWords: string[] = []
+  const truncatedWords: string[] = []
   currentLength = 0
 
   for (const word of words) {
@@ -128,20 +123,20 @@ function smartTruncate(content: string, maxLength: number): { text: string; isTr
   return { text: content.slice(0, maxLength), isTruncated: true }
 }
 
-export default function FormattedText({ 
-  content, 
-  isPreview = false, 
+export default function FormattedText({
+  content,
+  isPreview = false,
   maxLength = 120,
-  className = ""
+  className = '',
 }: FormattedTextProps) {
   // 按换行符分割内容
-  const paragraphs = content.split('\n').filter(p => p.trim() !== '')
-  
+  const paragraphs = content.split('\n').filter((p) => p.trim() !== '')
+
   if (isPreview) {
     // 预览模式：智能截断
     const { text: truncatedContent, isTruncated } = smartTruncate(content, maxLength)
-    const previewParagraphs = truncatedContent.split('\n').filter(p => p.trim() !== '')
-    
+    const previewParagraphs = truncatedContent.split('\n').filter((p) => p.trim() !== '')
+
     return (
       <div className={`space-y-2 ${className}`}>
         {previewParagraphs.map((paragraph, index) => (
@@ -149,13 +144,11 @@ export default function FormattedText({
             {processTextFormatting(paragraph.trim())}
           </p>
         ))}
-        {isTruncated && (
-          <span className="text-gray-400 dark:text-gray-500">...</span>
-        )}
+        {isTruncated && <span className="text-gray-400 dark:text-gray-500">...</span>}
       </div>
     )
   }
-  
+
   // 完整模式：显示所有段落
   return (
     <div className={`space-y-3 ${className}`}>
@@ -166,4 +159,4 @@ export default function FormattedText({
       ))}
     </div>
   )
-} 
+}
