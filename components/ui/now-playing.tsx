@@ -17,7 +17,7 @@ export function SpotifyNowPlaying({
   showCover?: boolean
   songEffect?: 'none' | 'underline'
 }) {
-  let { songUrl, title, artist, albumImageUrl } = useNowPlaying()
+  const { songUrl, title, artist, albumImageUrl } = useNowPlaying()
 
   return (
     <div className={clsx(['flex items-center', className])}>

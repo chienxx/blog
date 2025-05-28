@@ -2,16 +2,16 @@ const SPOTIFY_TOKEN_API = `https://accounts.spotify.com/api/token`
 const SPOTIFY_NOW_PLAYING_API = `https://api.spotify.com/v1/me/player/currently-playing`
 const SPOTIFY_TOP_TRACKS_API = `https://api.spotify.com/v1/me/top/tracks`
 
-let {
+const {
   SPOTIFY_CLIENT_ID: client_id,
   SPOTIFY_CLIENT_SECRET: client_secret,
   SPOTIFY_REFRESH_TOKEN: refresh_token = '',
 } = process.env
 
-let basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64')
+const basic = Buffer.from(`${client_id}:${client_secret}`).toString('base64')
 
 async function getAccessToken() {
-  let response = await fetch(SPOTIFY_TOKEN_API, {
+  const response = await fetch(SPOTIFY_TOKEN_API, {
     method: 'POST',
     headers: {
       Authorization: `Basic ${basic}`,
@@ -28,8 +28,8 @@ async function getAccessToken() {
 }
 
 export async function getNowPlaying() {
-  let { access_token } = await getAccessToken()
-  let url = new URL(SPOTIFY_NOW_PLAYING_API)
+  const { access_token } = await getAccessToken()
+  const url = new URL(SPOTIFY_NOW_PLAYING_API)
   url.searchParams.append('additional_types', 'track,episode')
 
   return fetch(url.toString(), {
@@ -41,7 +41,7 @@ export async function getNowPlaying() {
 }
 
 export async function getTopTracks() {
-  let { access_token } = await getAccessToken()
+  const { access_token } = await getAccessToken()
 
   return fetch(SPOTIFY_TOP_TRACKS_API, {
     headers: {
