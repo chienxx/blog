@@ -1,7 +1,7 @@
 'use client'
 
 import { clsx } from 'clsx'
-import Spotify from '~/icons/spotify.svg'
+import Spotify from '../../icons/spotify.svg'
 import { GrowingUnderline } from '@/components/ui/growing-underline'
 import { Link } from './link'
 import { MusicWaves } from '@/components/ui/music-waves'
