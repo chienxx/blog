@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="21" viewBox="0 0 200 28">
+  <!-- 整体背景（最左侧和最右侧圆角） -->
+  <rect width="200" height="28" rx="6" fill="url(#combinedGradient)"/>
+  
+  <!-- 左侧文字 "Deployed on" -->
+  <text x="12" y="18" font-size="14" fill="#fff" font-weight="500">Deployed on</text>
+  
+  <!-- 右侧Vercel图标和文字 -->
+  <g transform="translate(120, 6)">
+    <!-- Vercel图标（黑色三角形） -->
+    <path d="M12 2L2 16h20L12 2z" fill="#000"/>
+    <!-- Vercel文字 -->
+    <text x="25" y="13" font-size="14" fill="#fff" font-weight="500">Vercel</text>
+  </g>
+  
+  <!-- 定义整体渐变 -->
+  <defs>
+    <linearGradient id="combinedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <!-- 左侧渐变 -->
+      <stop offset="0%" stop-color="#606060"/>
+      <stop offset="55%" stop-color="#484848"/>
+      <!-- 右侧渐变 -->
+      <stop offset="55%" stop-color="#4878C0"/>
+      <stop offset="100%" stop-color="#3078A8"/>
+    </linearGradient>
+  </defs>
+</svg>

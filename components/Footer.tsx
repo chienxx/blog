@@ -1,6 +1,5 @@
 import Link from './Link'
 import siteMetadata from '@/data/siteMetadata'
-import { SpotifyNowPlaying } from '@/components/ui/now-playing'
 
 export default function Footer() {
   return (
