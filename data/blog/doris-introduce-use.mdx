@@ -1,0 +1,165 @@
+---
+title: 'Apache Doris 入门指南：高性能 OLAP 数据库详解'
+date: '2025-06-18'
+lastmod: '2025-06-18'
+tags: ['doris', 'olap', 'database', 'bigdata', 'analytics']
+draft: false
+summary: '深入解析 Apache Doris 的核心特性、架构设计和使用场景，帮助你快速掌握这个高性能的 OLAP 数据库系统。'
+layout: PostLayout
+---
+
+Apache Doris 是一个现代化的 MPP（Massively Parallel Processing）分析型数据库，专为 OLAP（Online Analytical Processing）场景设计。本文将详细介绍 Doris 的核心特性、架构设计以及实际应用场景。
+
+## Doris 核心特性一览
+
+| 特性类别     | 详细说明                                                                       |
+| ------------ | ------------------------------------------------------------------------------ |
+| **高性能**   | 支持 PB 级数据高效查询，列式存储，向量化执行，智能分区裁剪，物化视图等优化手段 |
+| **实时性**   | 支持实时数据导入（Stream Load、Routine Load）、实时查询                        |
+| **易用性**   | 兼容 MySQL 协议，支持标准 SQL，易于上手                                        |
+| **高可用**   | 多副本机制，自动故障转移，主从架构                                             |
+| **可扩展性** | 支持水平扩展，动态扩容                                                         |
+| **数据模型** | 明细模型（Duplicate Key）、聚合模型（Aggregate Key）、主键模型（Unique Key）   |
+| **数据导入** | Stream Load、Broker Load、Routine Load、Insert Into                            |
+| **查询优化** | 列式存储、向量化执行、分区裁剪、物化视图                                       |
+
+## Doris 架构组件
+
+| 组件           | 作用说明                             |
+| -------------- | ------------------------------------ |
+| Frontend（FE） | 元数据管理、集群管理、查询解析与规划 |
+| Backend（BE）  | 数据存储、查询执行                   |
+| Broker         | 外部存储系统访问                     |
+
+Doris 采用主从架构，FE 负责集群和元数据管理，BE 负责数据存储与查询，Broker 组件则用于对接外部存储（如 HDFS、S3 等）。
+
+## 数据模型与导入方式
+
+| 模型名称 | 建表关键字    | 存储引擎 | 数据特点                       | 应用场景                             |
+| -------- | ------------- | -------- | ------------------------------ | ------------------------------------ |
+| 明细模型 | DUPLICATE KEY | OLAP     | 不做去重，保留每一条记录       | 明细日志表、数据同步中转表等         |
+| 聚合模型 | AGGREGATE KEY | OLAP     | 按指定字段聚合，自动合并数据   | 报表汇总、时序聚合、离线统计等       |
+| 主键模型 | UNIQUE KEY    | OLAP     | 按主键更新，最后写入的数据生效 | 实时更新类场景、维度表（维度快照）等 |
+
+| 数据导入方式 | 说明                             |
+| ------------ | -------------------------------- |
+| Stream Load  | 适合实时数据导入，简单高效       |
+| Broker Load  | 支持大批量数据导入，适合离线场景 |
+| Routine Load | 持续自动导入，适合流式数据       |
+| Insert Into  | 兼容 SQL 标准插入，灵活方便      |
+
+## 典型应用场景
+
+| 场景         | 说明                                       |
+| ------------ | ------------------------------------------ |
+| 实时数据分析 | 支持大规模数据的实时分析，低延迟高并发     |
+| 报表系统     | 高效支撑复杂报表需求，灵活的数据聚合能力   |
+| 用户行为分析 | 快速洞察用户行为，支持多维度分析           |
+| 日志分析     | 高效处理和分析日志数据，适合安全与运维场景 |
+| 数据仓库     | 构建企业级数据仓库，支撑多业务数据分析     |
+
+## 应用实践
+
+Doris 在实际业务中支持灵活的动态分区建表、跨源数据分析、定时调度任务以及丰富的窗口函数等高级分析能力。以下通过典型场景示例，帮助你快速掌握 Doris 的实战用法。
+
+### 1. 动态分区建表示例
+
+动态分区可自动管理分区，适合大规模时序数据分析。
+
+```sql
+DROP TABLE IF EXISTS t_traffic_log;
+CREATE TABLE IF NOT EXISTS t_traffic_log(
+    `time` DATETIME NULL COMMENT '时间',
+    `customer_name` VARCHAR(80) NULL COMMENT '客户名称',
+    `out_octets` BIGINT NULL COMMENT '流出流量',
+    `in_octets` BIGINT NULL COMMENT '流入流量'
+) ENGINE = OLAP COMMENT '流量日志表'
+PARTITION BY RANGE(`time`)()
+DISTRIBUTED BY HASH(`customer_name`) BUCKETS AUTO
+PROPERTIES (
+  "replication_allocation" = "tag.location.default: 1",
+  "dynamic_partition.enable" = "true",
+  "dynamic_partition.time_unit" = "DAY",
+  "dynamic_partition.end" = "7",
+  "dynamic_partition.prefix" = "t_traffic_log"
+);
+```
+
+> 该建表语句实现了基于 `time` 字段的动态分区，自动管理近 7 天分区，适合日志、监控等时序数据场景。
+
+---
+
+### 2. 跨源数据分析：JDBC Catalog
+
+Doris JDBC Catalog 支持通过标准 JDBC 接口连接不同数据库，实现多源数据统一分析。
+
+**创建 MySQL Catalog 示例：**
+
+```sql
+CREATE CATALOG `mysql_catalog` PROPERTIES (
+  "type" = "jdbc",
+  "user" = "root",
+  "password" = "admin123",
+  "jdbc_url" = "jdbc:mysql://192.168.1.1:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true",
+  "driver_url" = "mysql-connector-java-8.jar",
+  "driver_class" = "com.mysql.cj.jdbc.Driver"
+);
+```
+
+---
+
+### 3. 定时调度任务
+
+Doris 支持通过 JOB 语法实现定时调度，自动同步或处理数据。
+
+**创建定时同步任务：**
+
+```sql
+CREATE JOB sync_record_to_mysql
+ON SCHEDULE EVERY 1 DAY STARTS '2025-06-18 02:00:00'
+COMMENT '每天凌晨2点同步数据到MySQL'
+DO INSERT INTO mysql_catalog.test.dst_table (time, name, age)
+SELECT time, name, age FROM t_student;
+```
+
+**删除定时任务：**
+
+```sql
+DROP JOB WHERE jobName = 'sync_record_to_mysql';
+```
+
+**查看任务执行情况：**
+
+```sql
+SELECT * FROM jobs("type"="insert");
+```
+
+---
+
+### 4. 窗口函数与高级分析
+
+分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算滚动合计、排名以及移动平均等。
+
+**LAG 窗口函数示例：**
+
+计算每个股票每日收盘价与前一天的差值：
+
+```sql
+SELECT stock_symbol, closing_date, closing_price,
+  LAG(closing_price, 1, 0) OVER (PARTITION BY stock_symbol ORDER BY closing_date) AS yesterday_closing
+FROM stock_ticker
+ORDER BY stock_symbol, closing_date;
+```
+
+| stock_symbol | closing_date        | closing_price | yesterday_closing |
+| ------------ | ------------------- | ------------- | ----------------- |
+| JDR          | 2014-09-13 00:00:00 | 12.86         | 0                 |
+| JDR          | 2014-09-14 00:00:00 | 12.89         | 12.86             |
+| JDR          | 2014-09-15 00:00:00 | 12.94         | 12.89             |
+| ...          | ...                 | ...           | ...               |
+
+> 通过该窗口函数可轻松实现不同周期的环比、同比等分析需求。
+
+## 结语
+
+凭借高性能、低延迟和良好的易用性，Apache Doris 已成为实时分析、报表制作及数据仓库建设中的理想选择。在实际项目中，Doris 展现出了出色的支撑能力，后续我也将持续分享 Doris 在项目中的使用技巧及常见问题的解决思路，欢迎交流。
