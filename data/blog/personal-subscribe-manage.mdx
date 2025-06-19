@@ -1,0 +1,148 @@
+---
+title: 'Wallos 个人订阅管理系统部署指南'
+date: '2025-06-03'
+tags: ['wallos', 'docker', 'subscription', 'management', 'webapp']
+draft: false
+summary: 'Wallos 是一个开源的订阅管理系统，可以帮助个人或小团队管理各种订阅服务。本文将详细介绍如何使用 Docker 部署 Wallos，让你轻松搭建属于自己的订阅管理平台。'
+layout: PostLayout
+---
+
+## 什么是 Wallos？
+
+Wallos 是一个现代化的开源订阅管理系统，专为个人用户和小型团队设计。它提供了直观的 Web 界面来管理各种订阅服务，包括流媒体、软件服务、云存储等。通过 Wallos，你可以：
+
+- 集中管理所有订阅服务
+- 跟踪订阅费用和到期时间
+- 设置提醒和通知
+- 生成费用报告和统计
+- 支持多种货币和支付方式
+
+## 系统要求
+
+在开始部署之前，请确保你的服务器满足以下要求：
+
+- **操作系统**：Linux（推荐 Ubuntu 20.04+ 或 CentOS 8+）
+- **内存**：至少 512MB RAM
+- **存储**：至少 1GB 可用空间
+- **网络**：稳定的互联网连接
+- **Docker**：已安装 Docker 和 Docker Compose
+
+## 部署 Wallos
+
+### 1. 创建项目目录
+
+```bash
+# 创建项目目录
+mkdir -p /opt/wallos
+cd /opt/wallos
+```
+
+### 2. 创建 Docker Compose 配置文件
+
+创建 `docker-compose.yml` 文件：
+
+```yml
+services:
+  wallos:
+    container_name: wallos
+    image: bellamy/wallos:latest
+    ports:
+      - '8282:80/tcp'
+    environment:
+      TZ: 'America/Toronto'
+    # Volumes store your data between container upgrades
+    volumes:
+      - './db:/var/www/html/db'
+      - './logos:/var/www/html/images/uploads/logos'
+    restart: unless-stopped
+```
+
+### 3. 启动服务
+
+```bash
+# 启动 Wallos 服务
+docker-compose up -d
+
+# 查看服务状态
+docker-compose ps
+
+# 查看日志
+docker-compose logs -f
+```
+
+## 初始配置
+
+### 1. 访问 Web 界面
+
+在浏览器中访问 `http://your_server_ip:8282`，你将看到 Wallos 的安装向导。
+
+### 2. 完成安装向导
+
+按照以下步骤完成初始配置：
+
+1. **选择语言**：选择你偏好的语言（支持中文）
+
+2. **管理员账户**：
+
+   - 创建管理员用户名和密码
+   - 设置管理员邮箱
+
+3. **完成安装**：点击完成按钮，系统将自动创建数据库表并完成初始化
+
+### 3. 登录系统
+
+安装完成后，使用你创建的管理员账户登录系统。
+
+## 使用指南
+
+### 1. 添加订阅服务
+
+1. 点击 **添加订阅** 按钮
+2. 填写订阅信息：
+   - **服务名称**：如 Netflix、Spotify 等
+   - **订阅类型**：选择服务类型
+   - **费用**：输入月费或年费
+   - **计费周期**：选择月付/年付
+   - **下次计费日期**：设置提醒日期
+   - **支付方式**：选择支付方式
+   - **备注**：添加额外信息
+
+### 2. 管理订阅
+
+- **查看所有订阅**：在主页查看所有订阅概览
+- **编辑订阅**：点击订阅卡片进行编辑
+- **停用订阅**：临时暂停某个订阅
+- **取消订阅**：标记订阅为已取消
+
+### 3. 费用统计
+
+- **总体统计**：查看整体订阅统计
+- **拆分视图**：订阅情况饼状图
+
+### 4. 订阅通知
+
+支持邮件、Discord、Telegram等多种形式，可以自定义通知时间
+
+### 5. 分类、货币
+
+默认有多种订阅分类和货币类型，可以在设置中编辑和删除，保留自己需要的部分
+
+### 6.用户管理
+
+管理员用户可以开放用户注册，方便将该服务分享给朋友
+
+### 7.主题样式
+
+内置多种主题选择，同时支持自定义样式
+
+## 网站截图
+
+![shouye](https://image.jxzsite.com/i/2025/06/19/sac0rq.png)
+
+![tongji](https://image.jxzsite.com/i/2025/06/19/sabzgp.png)
+
+![yonghu](https://image.jxzsite.com/i/2025/06/19/sac3vj.png)
+
+## 总结
+
+通过本文的教程，你已经成功部署了 Wallos 个人订阅管理系统。Wallos 提供了强大的订阅管理功能，帮助你更好地掌控各种服务的订阅情况，避免不必要的费用支出。
